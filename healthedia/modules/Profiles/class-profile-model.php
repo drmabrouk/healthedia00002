@@ -36,4 +36,18 @@ class Healthedia_Profile_Model {
 		$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $table WHERE object_id = %d AND object_type = 'user'", $user_id ) );
 		return $row ? $row : (object) array('views' => 0, 'citations' => 0);
 	}
+
+	/**
+	 * Get the standardized username-based clean public URL of a profile.
+	 */
+	public static function get_profile_url( $user_id ) {
+		$username = get_user_meta( $user_id, '_healthedia_username', true );
+		if ( ! $username ) {
+			$user = get_userdata( $user_id );
+			if ( $user ) {
+				$username = $user->user_nicename;
+			}
+		}
+		return $username ? home_url( '/' . $username ) : home_url( '/' );
+	}
 }

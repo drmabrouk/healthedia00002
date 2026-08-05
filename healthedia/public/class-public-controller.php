@@ -15,5 +15,8 @@ class Healthedia_Public_Controller {
 
 	public function enqueue_scripts() {
 		wp_enqueue_script( $this->plugin_name . '-public', HEALTHEDIA_PLUGIN_URL . 'assets/js/healthedia-public.js', array( 'jquery' ), $this->version, true );
+		wp_localize_script( $this->plugin_name . '-public', 'healthediaPublicSettings', array(
+			'nonce' => wp_create_nonce( 'wp_rest' )
+		) );
 	}
 }

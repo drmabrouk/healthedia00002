@@ -12,7 +12,24 @@ $orcid = get_user_meta($user_id, '_healthedia_orcid', true);
 $privacy_mode = get_user_meta($user_id, '_healthedia_privacy_mode', true) ?: 'public';
 $description = get_user_meta($user_id, 'description', true);
 
-$public_url = $username ? home_url('/' . $username) : home_url('/profile/' . $user_id);
+$academic_title = get_user_meta($user_id, '_healthedia_academic_title', true);
+$academic_positions = get_user_meta($user_id, '_healthedia_academic_positions', true);
+$expertise = get_user_meta($user_id, '_healthedia_expertise', true);
+$interests = get_user_meta($user_id, '_healthedia_interests', true);
+$google_scholar = get_user_meta($user_id, '_healthedia_google_scholar', true);
+$researchgate = get_user_meta($user_id, '_healthedia_researchgate', true);
+$scopus = get_user_meta($user_id, '_healthedia_scopus', true);
+$linkedin = get_user_meta($user_id, '_healthedia_linkedin', true);
+$twitter = get_user_meta($user_id, '_healthedia_twitter', true);
+$contact_email = get_user_meta($user_id, '_healthedia_contact_email', true);
+$enable_contact = get_user_meta($user_id, '_healthedia_enable_contact', true) ?: 'no';
+$projects = get_user_meta($user_id, '_healthedia_projects', true);
+$books = get_user_meta($user_id, '_healthedia_books', true);
+$awards = get_user_meta($user_id, '_healthedia_awards', true);
+$certifications = get_user_meta($user_id, '_healthedia_certifications', true);
+
+require_once HEALTHEDIA_PLUGIN_DIR . 'modules/Profiles/class-profile-model.php';
+$public_url = Healthedia_Profile_Model::get_profile_url($user_id);
 ?>
 <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-12 py-12 px-4 bg-white text-[#111111]">
 	<?php include HEALTHEDIA_PLUGIN_DIR . 'public/views/layout-member-sidebar.php'; ?>
@@ -109,10 +126,11 @@ $public_url = $username ? home_url('/' . $username) : home_url('/profile/' . $us
 
 			<!-- Profile Information -->
 			<?php if (current_user_can('request_verification')) : ?>
-			<div class="bg-white border border-[#E0E0E0] rounded-2xl p-8">
-				<h2 class="font-sans font-bold uppercase tracking-wider text-sm mb-6">Academic Information</h2>
+			<div class="bg-white border border-[#E0E0E0] rounded-2xl p-8 space-y-8">
+				<h2 class="font-sans font-bold uppercase tracking-wider text-sm mb-6 border-b border-[#E0E0E0] pb-4">Academic & Professional Information</h2>
 
-				<div class="mb-8 pb-8 border-b border-[#E0E0E0]">
+				<!-- Portrait -->
+				<div class="mb-8">
 					<label class="block font-mono text-[10px] uppercase tracking-widest text-gray-500 mb-2">Profile Portrait</label>
 					<div class="flex items-center gap-6">
 						<div class="w-24 h-24 rounded-full bg-gray-100 border border-[#E0E0E0] overflow-hidden flex-shrink-0">
@@ -132,7 +150,8 @@ $public_url = $username ? home_url('/' . $username) : home_url('/profile/' . $us
 					</div>
 				</div>
 
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+				<!-- Basic Bio Info -->
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 					<div>
 						<label class="block font-mono text-[10px] uppercase tracking-widest text-gray-500 mb-2">First Name</label>
 						<input type="text" name="first_name" value="<?php echo esc_attr($first_name); ?>" required class="w-full border border-[#E0E0E0] rounded-xl px-4 py-2.5 font-sans outline-none focus:border-black bg-white">
@@ -142,8 +161,16 @@ $public_url = $username ? home_url('/' . $username) : home_url('/profile/' . $us
 						<input type="text" name="last_name" value="<?php echo esc_attr($last_name); ?>" required class="w-full border border-[#E0E0E0] rounded-xl px-4 py-2.5 font-sans outline-none focus:border-black bg-white">
 					</div>
 					<div>
+						<label class="block font-mono text-[10px] uppercase tracking-widest text-gray-500 mb-2">Academic Title (e.g. Dr., Prof., PhD)</label>
+						<input type="text" name="_healthedia_academic_title" value="<?php echo esc_attr($academic_title); ?>" placeholder="e.g. Dr., Prof., Senior Researcher" class="w-full border border-[#E0E0E0] rounded-xl px-4 py-2.5 font-sans outline-none focus:border-black bg-white">
+					</div>
+					<div>
 						<label class="block font-mono text-[10px] uppercase tracking-widest text-gray-500 mb-2">Primary Specialty</label>
 						<input type="text" name="_healthedia_specialty" value="<?php echo esc_attr($specialty); ?>" placeholder="e.g. Sports Science & Physiology" class="w-full border border-[#E0E0E0] rounded-xl px-4 py-2.5 font-sans outline-none focus:border-black bg-white">
+					</div>
+					<div>
+						<label class="block font-mono text-[10px] uppercase tracking-widest text-gray-500 mb-2">Current Academic Positions</label>
+						<input type="text" name="_healthedia_academic_positions" value="<?php echo esc_attr($academic_positions); ?>" placeholder="e.g. Associate Professor in Neurophysiology" class="w-full border border-[#E0E0E0] rounded-xl px-4 py-2.5 font-sans outline-none focus:border-black bg-white">
 					</div>
 					<div>
 						<label class="block font-mono text-[10px] uppercase tracking-widest text-gray-500 mb-2">Institution / Affiliated Lab</label>
@@ -159,9 +186,96 @@ $public_url = $username ? home_url('/' . $username) : home_url('/profile/' . $us
 					</div>
 				</div>
 
+				<!-- Specialties and tags -->
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+					<div>
+						<label class="block font-mono text-[10px] uppercase tracking-widest text-gray-500 mb-2">Areas of Expertise (Comma-separated)</label>
+						<input type="text" name="_healthedia_expertise" value="<?php echo esc_attr($expertise); ?>" placeholder="e.g. Cardiology, Biomechanics, Electrophysiology" class="w-full border border-[#E0E0E0] rounded-xl px-4 py-2.5 font-sans outline-none focus:border-black bg-white">
+					</div>
+					<div>
+						<label class="block font-mono text-[10px] uppercase tracking-widest text-gray-500 mb-2">Research Interests (Comma-separated)</label>
+						<input type="text" name="_healthedia_interests" value="<?php echo esc_attr($interests); ?>" placeholder="e.g. Sports performance, Cardiac rehab, AI in Medicine" class="w-full border border-[#E0E0E0] rounded-xl px-4 py-2.5 font-sans outline-none focus:border-black bg-white">
+					</div>
+				</div>
+
+				<!-- Academic & Research Registries -->
 				<div>
-					<label class="block font-mono text-[10px] uppercase tracking-widest text-gray-500 mb-2">Professional Biography (Abstract)</label>
-					<textarea name="description" rows="5" class="w-full border border-[#E0E0E0] rounded-xl px-4 py-2.5 font-sans outline-none focus:border-black bg-white resize-y"><?php echo esc_textarea($description); ?></textarea>
+					<h3 class="font-sans font-bold uppercase tracking-wider text-xs mb-4 text-gray-700">Academic Profiles & Scholarly Indices</h3>
+					<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+						<div>
+							<label class="block font-mono text-[10px] uppercase tracking-widest text-gray-500 mb-2">Google Scholar Profile URL</label>
+							<input type="url" name="_healthedia_google_scholar" value="<?php echo esc_url($google_scholar); ?>" placeholder="https://scholar.google.com/citations?user=..." class="w-full border border-[#E0E0E0] rounded-xl px-4 py-2.5 font-sans text-xs outline-none focus:border-black bg-white">
+						</div>
+						<div>
+							<label class="block font-mono text-[10px] uppercase tracking-widest text-gray-500 mb-2">ResearchGate URL</label>
+							<input type="url" name="_healthedia_researchgate" value="<?php echo esc_url($researchgate); ?>" placeholder="https://www.researchgate.net/profile/..." class="w-full border border-[#E0E0E0] rounded-xl px-4 py-2.5 font-sans text-xs outline-none focus:border-black bg-white">
+						</div>
+						<div>
+							<label class="block font-mono text-[10px] uppercase tracking-widest text-gray-500 mb-2">Scopus Author ID URL</label>
+							<input type="url" name="_healthedia_scopus" value="<?php echo esc_url($scopus); ?>" placeholder="https://www.scopus.com/authid/detail.uri?authorId=..." class="w-full border border-[#E0E0E0] rounded-xl px-4 py-2.5 font-sans text-xs outline-none focus:border-black bg-white">
+						</div>
+					</div>
+				</div>
+
+				<!-- Social Media Links -->
+				<div>
+					<h3 class="font-sans font-bold uppercase tracking-wider text-xs mb-4 text-gray-700">Professional Networks</h3>
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+						<div>
+							<label class="block font-mono text-[10px] uppercase tracking-widest text-gray-500 mb-2">LinkedIn URL</label>
+							<input type="url" name="_healthedia_linkedin" value="<?php echo esc_url($linkedin); ?>" placeholder="https://linkedin.com/in/..." class="w-full border border-[#E0E0E0] rounded-xl px-4 py-2.5 font-sans text-xs outline-none focus:border-black bg-white">
+						</div>
+						<div>
+							<label class="block font-mono text-[10px] uppercase tracking-widest text-gray-500 mb-2">Twitter / X URL</label>
+							<input type="url" name="_healthedia_twitter" value="<?php echo esc_url($twitter); ?>" placeholder="https://twitter.com/..." class="w-full border border-[#E0E0E0] rounded-xl px-4 py-2.5 font-sans text-xs outline-none focus:border-black bg-white">
+						</div>
+					</div>
+				</div>
+
+				<!-- Contact Settings -->
+				<div>
+					<h3 class="font-sans font-bold uppercase tracking-wider text-xs mb-4 text-gray-700">Contact Information</h3>
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+						<div>
+							<label class="block font-mono text-[10px] uppercase tracking-widest text-gray-500 mb-2">Public/Contact Email</label>
+							<input type="email" name="_healthedia_contact_email" value="<?php echo esc_attr($contact_email); ?>" placeholder="contact@university.edu" class="w-full border border-[#E0E0E0] rounded-xl px-4 py-2.5 font-sans outline-none focus:border-black bg-white">
+						</div>
+						<div class="flex items-center pt-6">
+							<label class="flex items-center gap-3 cursor-pointer">
+								<input type="hidden" name="_healthedia_enable_contact" value="no">
+								<input type="checkbox" name="_healthedia_enable_contact" value="yes" <?php checked($enable_contact, 'yes'); ?> class="w-4 h-4 text-black border-gray-300 focus:ring-black">
+								<span class="font-mono text-[10px] text-gray-500 uppercase tracking-widest">Enable Public Inquiry Contact Link</span>
+							</label>
+						</div>
+					</div>
+				</div>
+
+				<!-- Rich Text / Textareas -->
+				<div class="space-y-6">
+					<div>
+						<label class="block font-mono text-[10px] uppercase tracking-widest text-gray-500 mb-2">Professional Biography (Abstract)</label>
+						<textarea name="description" rows="5" class="w-full border border-[#E0E0E0] rounded-xl px-4 py-2.5 font-sans outline-none focus:border-black bg-white resize-y" placeholder="Brief biographical statement similar to Wikipedia overview..."><?php echo esc_textarea($description); ?></textarea>
+					</div>
+
+					<div>
+						<label class="block font-mono text-[10px] uppercase tracking-widest text-gray-500 mb-2">Research Projects (One per line or paragraph)</label>
+						<textarea name="_healthedia_projects" rows="4" class="w-full border border-[#E0E0E0] rounded-xl px-4 py-2.5 font-sans outline-none focus:border-black bg-white resize-y" placeholder="Active and past research projects..."><?php echo esc_textarea($projects); ?></textarea>
+					</div>
+
+					<div>
+						<label class="block font-mono text-[10px] uppercase tracking-widest text-gray-500 mb-2">Books & Major Contributions (One per line or paragraph)</label>
+						<textarea name="_healthedia_books" rows="4" class="w-full border border-[#E0E0E0] rounded-xl px-4 py-2.5 font-sans outline-none focus:border-black bg-white resize-y" placeholder="Academic monographs, book chapters, editing..."><?php echo esc_textarea($books); ?></textarea>
+					</div>
+
+					<div>
+						<label class="block font-mono text-[10px] uppercase tracking-widest text-gray-500 mb-2">Awards & Honors (One per line or paragraph)</label>
+						<textarea name="_healthedia_awards" rows="4" class="w-full border border-[#E0E0E0] rounded-xl px-4 py-2.5 font-sans outline-none focus:border-black bg-white resize-y" placeholder="Grants, professional fellowships, outstanding awards..."><?php echo esc_textarea($awards); ?></textarea>
+					</div>
+
+					<div>
+						<label class="block font-mono text-[10px] uppercase tracking-widest text-gray-500 mb-2">Certifications & Credentials (One per line or paragraph)</label>
+						<textarea name="_healthedia_certifications" rows="4" class="w-full border border-[#E0E0E0] rounded-xl px-4 py-2.5 font-sans outline-none focus:border-black bg-white resize-y" placeholder="Clinical certifications, professional memberships..."><?php echo esc_textarea($certifications); ?></textarea>
+					</div>
 				</div>
 			</div>
 
