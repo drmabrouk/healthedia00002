@@ -52,8 +52,8 @@ class Healthedia_Search_Endpoints {
 			if ($row->object_type === 'user') {
 				if (isset($raw_meta['_healthedia_specialty'])) $safe_meta['specialty'] = $raw_meta['_healthedia_specialty'][0];
 				if (isset($raw_meta['_healthedia_verified'])) $safe_meta['verified'] = $raw_meta['_healthedia_verified'][0];
-				$username = get_user_meta($row->object_id, '_healthedia_username', true);
-				$formatted_row['url'] = $username ? home_url('/' . $username) : home_url('/profile/' . $row->object_id);
+				require_once HEALTHEDIA_PLUGIN_DIR . 'modules/Profiles/class-profile-model.php';
+				$formatted_row['url'] = Healthedia_Profile_Model::get_profile_url($row->object_id);
 			} else {
 				if (isset($raw_meta['_healthedia_doi'])) $safe_meta['doi'] = $raw_meta['_healthedia_doi'][0];
 				$formatted_row['url'] = get_permalink($row->object_id);

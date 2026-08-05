@@ -64,12 +64,31 @@ class Healthedia_Profile_Endpoints {
 			'_healthedia_institution',
 			'_healthedia_country',
 			'_healthedia_orcid',
-			'_healthedia_privacy_mode'
+			'_healthedia_privacy_mode',
+			'_healthedia_academic_title',
+			'_healthedia_academic_positions',
+			'_healthedia_expertise',
+			'_healthedia_interests',
+			'_healthedia_google_scholar',
+			'_healthedia_researchgate',
+			'_healthedia_scopus',
+			'_healthedia_linkedin',
+			'_healthedia_twitter',
+			'_healthedia_contact_email',
+			'_healthedia_enable_contact',
+			'_healthedia_projects',
+			'_healthedia_books',
+			'_healthedia_awards',
+			'_healthedia_certifications'
 		);
 
 		foreach ($updatable_meta as $key) {
 			if (isset($params[$key])) {
-				update_user_meta($user_id, $key, sanitize_text_field($params[$key]));
+				if (in_array($key, array('_healthedia_projects', '_healthedia_books', '_healthedia_awards', '_healthedia_certifications'))) {
+					update_user_meta($user_id, $key, sanitize_textarea_field($params[$key]));
+				} else {
+					update_user_meta($user_id, $key, sanitize_text_field($params[$key]));
+				}
 			}
 		}
 
