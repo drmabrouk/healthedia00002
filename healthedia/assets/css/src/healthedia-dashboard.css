@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-size-xs: clamp(0.65rem, 0.6rem + 0.2vw, 0.75rem);
+  --font-size-sm: clamp(0.8rem, 0.75rem + 0.25vw, 0.875rem);
+  --font-size-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --font-size-xl: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  --font-size-3xl: clamp(1.875rem, 1.65rem + 1vw, 2.25rem);
+  --font-size-5xl: clamp(3rem, 2.5rem + 2vw, 4rem);
+}
+
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-dark font-sans;
+  }
+
+  h1, h2, h3 { font-size: var(--font-size-3xl); }
+  .text-5xl { font-size: var(--font-size-5xl); }
+  .text-3xl { font-size: var(--font-size-3xl); }
+  .text-2xl { font-size: var(--font-size-xl); }
+  .text-sm { font-size: var(--font-size-sm); }
+  .text-xs { font-size: var(--font-size-xs); }
+}
+
+@layer components {
+  button, select {
+    @apply min-h-[44px] min-w-[44px];
+  }
+}
