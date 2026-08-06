@@ -1,5 +1,8 @@
 {
     "/assets/js/healthedia-public.js": "/assets/js/healthedia-public.js",
+    "/assets/js/member-settings.js": "/assets/js/member-settings.js",
+    "/assets/js/archive-search.js": "/assets/js/archive-search.js",
+    "/assets/js/member-requests.js": "/assets/js/member-requests.js",
     "/assets/js/healthedia-dashboard.js": "/assets/js/healthedia-dashboard.js",
     "/assets/css/healthedia-dashboard.css": "/assets/css/healthedia-dashboard.css",
     "/assets/css/healthedia-core.css": "/assets/css/healthedia-core.css"

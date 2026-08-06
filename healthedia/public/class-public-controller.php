@@ -18,5 +18,14 @@ class Healthedia_Public_Controller {
 		wp_localize_script( $this->plugin_name . '-public', 'healthediaPublicSettings', array(
 			'nonce' => wp_create_nonce( 'wp_rest' )
 		) );
+
+		$page = get_query_var('healthedia_page');
+		if ( $page === 'member_settings' ) {
+			wp_enqueue_script( $this->plugin_name . '-member-settings', HEALTHEDIA_PLUGIN_URL . 'assets/js/member-settings.js', array( $this->plugin_name . '-public' ), $this->version, true );
+		} elseif ( $page === 'archive_search' ) {
+			wp_enqueue_script( $this->plugin_name . '-archive-search', HEALTHEDIA_PLUGIN_URL . 'assets/js/archive-search.js', array( $this->plugin_name . '-public' ), $this->version, true );
+		} elseif ( $page === 'member_requests' ) {
+			wp_enqueue_script( $this->plugin_name . '-member-requests', HEALTHEDIA_PLUGIN_URL . 'assets/js/member-requests.js', array( $this->plugin_name . '-public' ), $this->version, true );
+		}
 	}
 }
