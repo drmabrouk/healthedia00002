@@ -1,0 +1,21 @@
+# Changelog
+
+## [1.1.0] - $(date +'%Y-%m-%d')
+### Added
+- **Multi-step Registration**: Completely redesigned the registration flow with proper data chunking, terms acceptance, and immediate password matching validation.
+- **Enhanced Verification Requests**: Built out the full pipeline for securely managing, approving, and rejecting verification requests with email integrations.
+- **Search History & Autocomplete**: Upgraded the main search engine interface with recent search caching, LocalStorage history, autocomplete, and an interactive voice search integration on the Gateway.
+- **Articles Dashboard Controls**: Admins can now perform Bulk Actions (Publish, Draft, Delete) on articles.
+- **Notification Triggers**: Added complete in-platform notifications for account restriction events, bulk publication processes, password/email changes, and specific profile view milestones.
+- **Legal Navigation Settings**: Added dashboard-controllable URLs for the site's footer legal pages (Privacy Policy, Terms of Service).
+
+### Changed
+- **Unified Toolbar & Icons**: Completely standardized all utility icons across the frontend and React Dashboard for a strict monochrome presentation.
+- **Profile URLs**: Standardized routing to remove `/u/` segments, handling custom usernames directly from the domain root cleanly.
+- **Header & Footer Architecture**: Reordered the main navigation to sit next to the logo, removed unnecessary borders, added the "Global Health Archive" tagline, and minimized the footer footprint.
+- **Auth Form Revisions**: Restructured authentication forms to use explicit password inputs (including toggles for visibility) replacing the OTP-only login workflow in favor of a standard Email/Username + Password flow.
+
+### Fixed
+- **Administrator Dashboard Loading Bug**: Corrected a silent React rendering failure by properly caching API fetches during loading states and explicitly catching `401`/`403` HTTP errors to redirect unauthorized accesses to `/login`.
+- **Forgot Password Workflow**: Fixed the previously broken OTP-driven Password Reset system so it properly grants a temporary token and displays the reset form dynamically.
+- **Template Rendering Engine**: Addressed an orphaned routing error preventing single content templates from properly resolving in the custom theme wrapper.
