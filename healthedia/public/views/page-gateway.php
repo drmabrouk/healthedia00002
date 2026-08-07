@@ -1,5 +1,5 @@
 <?php include HEALTHEDIA_PLUGIN_DIR . 'public/views/layout-header.php'; ?>
-<div class="healthedia-gateway flex flex-col items-center justify-center bg-white text-[#111111] pt-24 pb-12">
+<div class="healthedia-gateway flex-grow flex flex-col items-center justify-center bg-white text-[#111111] h-[calc(100vh-7.5rem)] min-h-[calc(100vh-7.5rem)] overflow-hidden">
 	<h1 class="text-6xl md:text-7xl font-sans font-bold tracking-tighter uppercase mb-2 text-center px-4">HEALTHEDIA</h1>
 	<p class="font-mono text-xs md:text-sm text-gray-500 mb-8 uppercase tracking-widest text-center px-4">Global Health Archive & Network</p>
 	<div class="w-full max-w-3xl relative px-4 md:px-0">

@@ -2,7 +2,7 @@
 <?php
 $query = isset($_GET['q']) ? sanitize_text_field($_GET['q']) : '';
 ?>
-<div class="max-w-7xl mx-auto py-12 px-4 bg-white text-[#111111] min-h-[60vh]">
+<div class="max-w-7xl mx-auto py-12 px-4 md:px-8 bg-white text-[#111111] min-h-[60vh]">
 	<?php
 	require_once HEALTHEDIA_PLUGIN_DIR . 'public/views/partials/breadcrumbs.php';
 	healthedia_breadcrumbs();

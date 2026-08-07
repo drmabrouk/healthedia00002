@@ -38,7 +38,7 @@ $institution = get_user_meta($user_id, '_healthedia_institution', true);
 $country = get_user_meta($user_id, '_healthedia_country', true);
 $orcid = get_user_meta($user_id, '_healthedia_orcid', true);
 ?>
-<div class="healthedia-profile max-w-7xl mx-auto py-12 px-4 bg-white text-[#111111]">
+<div class="healthedia-profile max-w-7xl mx-auto py-12 px-4 md:px-8 bg-white text-[#111111]">
 	<?php
 	require_once HEALTHEDIA_PLUGIN_DIR . 'public/views/partials/breadcrumbs.php';
 	healthedia_breadcrumbs();

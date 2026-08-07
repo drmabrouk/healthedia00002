@@ -211,6 +211,8 @@ class Healthedia_Dashboard_API {
 			foreach ($roles as $r) {
 				$user->add_role($r);
 			}
+			clean_user_cache($user_id);
+			wp_cache_delete($user_id, 'users');
 		}
 
 		if (is_wp_error($user_id)) {
@@ -260,6 +262,9 @@ class Healthedia_Dashboard_API {
 			}
 		}
 
+		clean_user_cache($id);
+		wp_cache_delete($id, 'users');
+
 		return rest_ensure_response(array('success' => true));
 	}
 
@@ -303,6 +308,8 @@ class Healthedia_Dashboard_API {
 	public function delete_article(WP_REST_Request $request) {
 		$id = $request->get_param('id');
 		wp_delete_post($id, true);
+		clean_post_cache($id);
+		wp_cache_delete($id, 'posts');
 		return rest_ensure_response(array('success' => true));
 	}
 
@@ -335,6 +342,8 @@ class Healthedia_Dashboard_API {
 					}
 				}
 			}
+			clean_post_cache($id);
+			wp_cache_delete($id, 'posts');
 		}
 
 		return rest_ensure_response(array('success' => true));
@@ -361,6 +370,8 @@ class Healthedia_Dashboard_API {
 					Healthedia_Notification_API::add_notification($post->post_author, "Your submission '{$title}' has been un-published or rejected.", home_url('/my-requests'));
 				}
 			}
+			clean_post_cache($id);
+			wp_cache_delete($id, 'posts');
 		}
 		return rest_ensure_response(array('success' => true));
 	}
@@ -372,6 +383,8 @@ class Healthedia_Dashboard_API {
 		}
 		require_once(ABSPATH . 'wp-admin/includes/user.php');
 		if (wp_delete_user($id)) {
+			clean_user_cache($id);
+			wp_cache_delete($id, 'users');
 			return rest_ensure_response(array('success' => true));
 		}
 		return new WP_Error('delete_failed', 'Failed to delete user.', array('status' => 500));
@@ -426,6 +439,9 @@ class Healthedia_Dashboard_API {
 		update_user_meta($user_id, '_healthedia_specialty', $specialty);
 		update_user_meta($user_id, '_healthedia_institution', $institution);
 
+		clean_user_cache($user_id);
+		wp_cache_delete($user_id, 'users');
+
 		return rest_ensure_response(array('success' => true, 'id' => $user_id));
 	}
 
@@ -442,6 +458,9 @@ class Healthedia_Dashboard_API {
 				delete_user_meta($id, '_healthedia_verified');
 			}
 		}
+
+		clean_user_cache($id);
+		wp_cache_delete($id, 'users');
 
 		return rest_ensure_response(array('success' => true));
 	}
@@ -485,6 +504,9 @@ class Healthedia_Dashboard_API {
 		$user = get_userdata($user_id);
 		wp_mail($user->user_email, 'Healthedia Account Verified', "Dear {$user->display_name},\n\nCongratulations! Your account verification request has been approved. The Verified Badge (✔) is now active on your public profile.\n\nThank you for being a part of the Healthedia global network.\n\nThe Healthedia Editorial Board");
 
+		clean_user_cache($user_id);
+		wp_cache_delete($user_id, 'users');
+
 		return rest_ensure_response(array('success' => true));
 	}
 
@@ -500,6 +522,9 @@ class Healthedia_Dashboard_API {
 
 		$user = get_userdata($user_id);
 		wp_mail($user->user_email, 'Healthedia Verification Update', "Dear {$user->display_name},\n\nWe have reviewed your verification request. Unfortunately, it was not approved at this time.\n\nReason: {$reason}\n\nYou may update your information and submit a new request via your Account Settings.\n\nThe Healthedia Editorial Board");
+
+		clean_user_cache($user_id);
+		wp_cache_delete($user_id, 'users');
 
 		return rest_ensure_response(array('success' => true));
 	}
@@ -540,6 +565,9 @@ class Healthedia_Dashboard_API {
 		if (isset($params['holder_name'])) update_post_meta($post_id, '_healthedia_cert_holder', sanitize_text_field($params['holder_name']));
 		if (isset($params['issue_date'])) update_post_meta($post_id, '_healthedia_cert_issue', sanitize_text_field($params['issue_date']));
 
+		clean_post_cache($post_id);
+		wp_cache_delete($post_id, 'posts');
+
 		return rest_ensure_response(array('success' => true, 'id' => $post_id));
 	}
 
@@ -557,12 +585,17 @@ class Healthedia_Dashboard_API {
 		if (isset($params['holder_name'])) update_post_meta($id, '_healthedia_cert_holder', sanitize_text_field($params['holder_name']));
 		if (isset($params['issue_date'])) update_post_meta($id, '_healthedia_cert_issue', sanitize_text_field($params['issue_date']));
 
+		clean_post_cache($id);
+		wp_cache_delete($id, 'posts');
+
 		return rest_ensure_response(array('success' => true));
 	}
 
 	public function delete_certificate(WP_REST_Request $request) {
 		$id = $request->get_param('id');
 		wp_delete_post($id, true);
+		clean_post_cache($id);
+		wp_cache_delete($id, 'posts');
 		return rest_ensure_response(array('success' => true));
 	}
 
@@ -588,6 +621,10 @@ class Healthedia_Dashboard_API {
 		if (isset($params['auth_maintenance_mode'])) update_option('healthedia_auth_maintenance', sanitize_text_field($params['auth_maintenance_mode']));
 		if (isset($params['privacy_policy_url'])) update_option('healthedia_privacy_policy_url', sanitize_text_field($params['privacy_policy_url']));
 		if (isset($params['terms_url'])) update_option('healthedia_terms_url', sanitize_text_field($params['terms_url']));
+
+		wp_cache_delete('alloptions', 'options');
+		wp_cache_flush();
+
 		return rest_ensure_response(array('success' => true, 'message' => 'Settings saved.'));
 	}
 }

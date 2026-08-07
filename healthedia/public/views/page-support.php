@@ -1,5 +1,5 @@
 <?php include HEALTHEDIA_PLUGIN_DIR . 'public/views/layout-header.php'; ?>
-<div class="max-w-7xl mx-auto py-16 px-4 bg-white text-[#111111]">
+<div class="max-w-7xl mx-auto py-12 px-4 md:px-8 bg-white text-[#111111]">
 
 	<h1 class="text-4xl md:text-5xl font-sans font-bold uppercase tracking-tight mb-4 text-center">Global Support</h1>
 	<p class="font-mono text-sm text-gray-500 uppercase mb-12 text-center">Technical & Editorial Assistance</p>

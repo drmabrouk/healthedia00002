@@ -29,7 +29,7 @@ if (!empty($search_query)) {
 	wp_reset_postdata();
 }
 ?>
-<div class="max-w-7xl mx-auto py-24 px-4 bg-white text-[#111111] text-center min-h-[calc(100vh-200px)] flex flex-col justify-center">
+<div class="max-w-7xl mx-auto py-12 px-4 md:px-8 bg-white text-[#111111] text-center min-h-[calc(100vh-200px)] flex flex-col justify-center">
 
 	<h1 class="text-4xl md:text-5xl font-sans font-bold uppercase tracking-tight mb-4">Certificate Verification</h1>
 	<p class="font-mono text-sm text-gray-500 uppercase mb-12">Verify the authenticity of Healthedia credentials</p>
