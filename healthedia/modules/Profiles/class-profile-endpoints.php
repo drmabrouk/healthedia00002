@@ -48,6 +48,9 @@ class Healthedia_Profile_Endpoints {
 
 		// Notify admins conceptually (or can be seen in dashboard)
 
+		clean_user_cache($user_id);
+		wp_cache_delete($user_id, 'users');
+
 		return rest_ensure_response(array('success' => true, 'message' => 'Verification request submitted successfully.'));
 	}
 
@@ -183,6 +186,9 @@ class Healthedia_Profile_Endpoints {
 			update_user_meta($user_id, '_healthedia_profile_photo', $photo_url);
 			update_user_meta($user_id, '_healthedia_profile_photo_id', $attachment_id);
 		}
+
+		clean_user_cache($user_id);
+		wp_cache_delete($user_id, 'users');
 
 		return rest_ensure_response(array('success' => true, 'message' => 'Profile updated successfully.'));
 	}

@@ -1,5 +1,5 @@
 <?php include HEALTHEDIA_PLUGIN_DIR . 'public/views/layout-header.php'; ?>
-<div class="max-w-7xl mx-auto py-12 px-4 bg-white text-[#111111]">
+<div class="max-w-7xl mx-auto py-12 px-4 md:px-8 bg-white text-[#111111]">
 
 	<div class="text-center border-b border-[#E0E0E0] pb-8 mb-10">
 		<h1 class="text-4xl font-sans font-bold uppercase tracking-tight mb-2">Add Published Research</h1>

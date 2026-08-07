@@ -1,5 +1,5 @@
 <?php include HEALTHEDIA_PLUGIN_DIR . 'public/views/layout-header.php'; ?>
-<div class="healthedia-academies max-w-7xl mx-auto py-12 px-4 bg-white text-[#111111]">
+<div class="healthedia-academies max-w-7xl mx-auto py-12 px-4 md:px-8 bg-white text-[#111111]">
 
 	<div class="flex flex-col md:flex-row justify-between items-end border-b border-[#E0E0E0] pb-6 mb-8 gap-4">
 		<div>

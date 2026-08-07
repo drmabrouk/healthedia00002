@@ -1,5 +1,10 @@
 <?php
 // Since this plugin replaces the frontend heavily, this is an optional layout wrapper.
+if ( ! headers_sent() ) {
+	header( 'Cache-Control: no-cache, no-store, must-revalidate, max-age=0' );
+	header( 'Pragma: no-cache' );
+	header( 'Expires: Wed, 11 Jan 1984 05:00:00 GMT' );
+}
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
@@ -12,10 +17,10 @@
 	<script>window.healthediaPublicSettings = { nonce: "<?php echo wp_create_nonce("wp_rest"); ?>" };</script>
 	<?php endif; ?>
 </head>
-<body <?php body_class('bg-white text-[#111111] antialiased min-h-screen flex flex-col'); ?>>
+<body <?php body_class('bg-white text-[#111111] antialiased min-h-screen flex flex-col pt-16 pb-14'); ?>>
 
 	<!-- Global Header (Archival Minimalist) -->
-	<header class="sticky top-0 bg-white/90 backdrop-blur-sm z-40">
+	<header class="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-sm z-40 border-b border-[#E0E0E0] h-16">
 		<div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
 
 			<div class="flex items-center gap-6 z-50">

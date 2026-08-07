@@ -816,4 +816,33 @@ document.addEventListener('DOMContentLoaded', () => {
 			});
 		}
 	}
+
+	// Journal Sections Tab Switching
+	const journalTabs = document.querySelectorAll('.journal-tab');
+	const journalSections = document.querySelectorAll('.journal-section');
+	if (journalTabs.length > 0 && journalSections.length > 0) {
+		journalTabs.forEach(tab => {
+			tab.addEventListener('click', (e) => {
+				e.preventDefault();
+				const targetId = tab.getAttribute('data-target');
+
+				// Update active styles for tabs
+				journalTabs.forEach(t => {
+					t.classList.remove('bg-black', 'text-white');
+					t.classList.add('text-gray-500', 'hover:text-black', 'hover:bg-gray-50');
+				});
+				tab.classList.add('bg-black', 'text-white');
+				tab.classList.remove('text-gray-500', 'hover:text-black', 'hover:bg-gray-50');
+
+				// Show target section, hide others
+				journalSections.forEach(sec => {
+					if (sec.id === targetId) {
+						sec.classList.remove('hidden');
+					} else {
+						sec.classList.add('hidden');
+					}
+				});
+			});
+		});
+	}
 });

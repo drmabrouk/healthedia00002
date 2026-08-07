@@ -1,12 +1,12 @@
 <?php include HEALTHEDIA_PLUGIN_DIR . 'public/views/layout-header.php'; ?>
-<div class="healthedia-journal max-w-7xl mx-auto flex flex-col md:flex-row gap-8 py-12 px-4 bg-white text-[#111111]">
+<div class="healthedia-journal max-w-7xl mx-auto flex flex-col md:flex-row gap-8 py-12 px-4 md:px-8 bg-white text-[#111111]">
 	<aside class="w-full md:w-1/4 border-r border-[#E0E0E0] pr-6">
 		<div class="sticky top-8">
 			<h3 class="font-sans font-bold uppercase tracking-wider mb-4 text-sm border-b border-[#E0E0E0] pb-2">Journal Sections</h3>
-			<ul class="font-mono text-sm space-y-2">
-				<li><a href="#" class="block px-4 py-2 bg-black text-white rounded-full">Current Issue</a></li>
-				<li><a href="#" class="block px-4 py-2 text-gray-500 hover:text-black hover:bg-gray-50 rounded-full transition-colors">Archived Issues</a></li>
-				<li><a href="#" class="block px-4 py-2 text-gray-500 hover:text-black hover:bg-gray-50 rounded-full transition-colors">Editorial Board</a></li>
+			<ul class="font-mono text-sm space-y-2" id="journal-sections-nav">
+				<li><a href="#" data-target="section-current-issue" class="journal-tab block px-4 py-2 bg-black text-white rounded-full transition-colors cursor-pointer">Current Issue</a></li>
+				<li><a href="#" data-target="section-archived-issues" class="journal-tab block px-4 py-2 text-gray-500 hover:text-black hover:bg-gray-50 rounded-full transition-colors cursor-pointer">Archived Issues</a></li>
+				<li><a href="#" data-target="section-editorial-board" class="journal-tab block px-4 py-2 text-gray-500 hover:text-black hover:bg-gray-50 rounded-full transition-colors cursor-pointer">Editorial Board</a></li>
 				<?php if (current_user_can('submit_journal')) : ?>
 				<li><a href="/submit-journal" class="block px-4 py-2 mt-4 border border-[#E0E0E0] text-gray-500 hover:text-black hover:border-black rounded-full transition-colors text-center">Submit Research</a></li>
 				<?php endif; ?>
@@ -26,36 +26,111 @@
 			</div>
 		</div>
 
-		<!-- Feed Filter -->
-		<div class="mb-6 flex gap-2">
-			<input type="text" placeholder="Search archive..." class="border border-[#E0E0E0] rounded-full px-6 py-2 text-sm font-sans outline-none focus:border-black w-full max-w-sm">
-			<select class="border border-[#E0E0E0] rounded-full px-6 py-2 text-sm font-sans outline-none focus:border-black cursor-pointer bg-white">
-				<option value="">All Specialties</option>
-				<option value="cardiology">Cardiology</option>
-				<option value="neurology">Neurology</option>
-			</select>
+		<!-- Section 1: Current Issue -->
+		<div id="section-current-issue" class="journal-section space-y-6">
+			<!-- Feed Filter -->
+			<div class="mb-6 flex gap-2">
+				<input type="text" placeholder="Search archive..." class="border border-[#E0E0E0] rounded-full px-6 py-2 text-sm font-sans outline-none focus:border-black w-full max-w-sm">
+				<select class="border border-[#E0E0E0] rounded-full px-6 py-2 text-sm font-sans outline-none focus:border-black cursor-pointer bg-white">
+					<option value="">All Specialties</option>
+					<option value="cardiology">Cardiology</option>
+					<option value="neurology">Neurology</option>
+				</select>
+			</div>
+
+			<div class="space-y-6">
+				<?php
+				$args = array('post_type' => array('healthedia_article', 'healthedia_post', 'healthedia_ext_res', 'healthedia_journal'), 'posts_per_page' => 10);
+				$query = new WP_Query($args);
+				if ($query->have_posts()): while ($query->have_posts()): $query->the_post();
+					$doi = get_post_meta(get_the_ID(), '_healthedia_doi', true);
+				?>
+				<div class="pb-6 border-b border-[#E0E0E0] hover:border-black transition-colors group">
+					<div class="flex gap-2 mb-3 font-mono text-[10px] uppercase tracking-widest">
+						<span class="border border-black px-2 py-0.5 rounded-full">Clinical Trial</span>
+						<span class="text-gray-500 border border-[#E0E0E0] px-2 py-0.5 rounded-full">Open Access</span>
+						<?php if($doi): ?><span class="text-gray-500 border border-[#E0E0E0] px-2 py-0.5 rounded-full">DOI: <?php echo esc_html($doi); ?></span><?php endif; ?>
+					</div>
+					<a href="<?php the_permalink(); ?>" class="font-sans font-bold text-2xl block mb-2 group-hover:underline"><?php the_title(); ?></a>
+					<div class="font-mono text-xs text-gray-500 mb-3">By <?php the_author(); ?> • <?php the_date(); ?></div>
+					<div class="font-sans text-gray-700 line-clamp-2"><?php the_excerpt(); ?></div>
+				</div>
+				<?php endwhile; wp_reset_postdata(); else: ?>
+				<p class="font-mono text-sm text-gray-500">No published articles available in this archive.</p>
+				<?php endif; ?>
+			</div>
 		</div>
 
-		<div class="space-y-6">
-			<?php
-			$args = array('post_type' => array('healthedia_article', 'healthedia_post', 'healthedia_ext_res', 'healthedia_journal'), 'posts_per_page' => 10);
-			$query = new WP_Query($args);
-			if ($query->have_posts()): while ($query->have_posts()): $query->the_post();
-				$doi = get_post_meta(get_the_ID(), '_healthedia_doi', true);
-			?>
-			<div class="pb-6 border-b border-[#E0E0E0] hover:border-black transition-colors group">
-				<div class="flex gap-2 mb-3 font-mono text-[10px] uppercase tracking-widest">
-					<span class="border border-black px-2 py-0.5 rounded-full">Clinical Trial</span>
-					<span class="text-gray-500 border border-[#E0E0E0] px-2 py-0.5 rounded-full">Open Access</span>
-					<?php if($doi): ?><span class="text-gray-500 border border-[#E0E0E0] px-2 py-0.5 rounded-full">DOI: <?php echo esc_html($doi); ?></span><?php endif; ?>
+		<!-- Section 2: Archived Issues -->
+		<div id="section-archived-issues" class="journal-section hidden space-y-8">
+			<h2 class="text-2xl font-sans font-bold uppercase tracking-tight mb-4">Past Volumes & Issues</h2>
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+				<div class="border border-[#E0E0E0] rounded-2xl p-6 bg-white shadow-sm hover:border-black transition-colors">
+					<div class="font-mono text-[10px] text-gray-400 uppercase tracking-widest mb-1">Published Jan 2025</div>
+					<h3 class="text-lg font-bold font-sans mb-3">Volume 3, Issue 1 (Winter 2025)</h3>
+					<p class="text-sm text-gray-600 mb-4 leading-relaxed">Focusing on clinical trial methodologies, platform validations, and advanced biostatistics.</p>
+					<span class="font-mono text-xs text-black font-bold uppercase tracking-wider">5 Indexed Papers</span>
 				</div>
-				<a href="<?php the_permalink(); ?>" class="font-sans font-bold text-2xl block mb-2 group-hover:underline"><?php the_title(); ?></a>
-				<div class="font-mono text-xs text-gray-500 mb-3">By <?php the_author(); ?> • <?php the_date(); ?></div>
-				<div class="font-sans text-gray-700 line-clamp-2"><?php the_excerpt(); ?></div>
+				<div class="border border-[#E0E0E0] rounded-2xl p-6 bg-white shadow-sm hover:border-black transition-colors">
+					<div class="font-mono text-[10px] text-gray-400 uppercase tracking-widest mb-1">Published Oct 2024</div>
+					<h3 class="text-lg font-bold font-sans mb-3">Volume 2, Issue 2 (Autumn 2024)</h3>
+					<p class="text-sm text-gray-600 mb-4 leading-relaxed">Highlighting neurological trauma baseline measurements, cognitive physiology, and brain plasticity.</p>
+					<span class="font-mono text-xs text-black font-bold uppercase tracking-wider">8 Indexed Papers</span>
+				</div>
+				<div class="border border-[#E0E0E0] rounded-2xl p-6 bg-white shadow-sm hover:border-black transition-colors">
+					<div class="font-mono text-[10px] text-gray-400 uppercase tracking-widest mb-1">Published Apr 2024</div>
+					<h3 class="text-lg font-bold font-sans mb-3">Volume 2, Issue 1 (Spring 2024)</h3>
+					<p class="text-sm text-gray-600 mb-4 leading-relaxed">Dedicated to advanced cardiovascular health patterns, microvascular analysis, and oxygenation baselines.</p>
+					<span class="font-mono text-xs text-black font-bold uppercase tracking-wider">12 Indexed Papers</span>
+				</div>
+				<div class="border border-[#E0E0E0] rounded-2xl p-6 bg-white shadow-sm hover:border-black transition-colors">
+					<div class="font-mono text-[10px] text-gray-400 uppercase tracking-widest mb-1">Published Dec 2023</div>
+					<h3 class="text-lg font-bold font-sans mb-3">Volume 1, Issue 1 (Inaugural Issue)</h3>
+					<p class="text-sm text-gray-600 mb-4 leading-relaxed">The debut of the Healthedia network, tracking initial peer-review structures and metadata frameworks.</p>
+					<span class="font-mono text-xs text-black font-bold uppercase tracking-wider">6 Indexed Papers</span>
+				</div>
 			</div>
-			<?php endwhile; wp_reset_postdata(); else: ?>
-			<p class="font-mono text-sm text-gray-500">No published articles available in this archive.</p>
-			<?php endif; ?>
+		</div>
+
+		<!-- Section 3: Editorial Board -->
+		<div id="section-editorial-board" class="journal-section hidden space-y-8">
+			<h2 class="text-2xl font-sans font-bold uppercase tracking-tight mb-4">Editorial Board Registry</h2>
+			<p class="text-sm text-gray-600 leading-relaxed mb-8">Our distinguished Editorial Board consists of globally recognized specialists, clinicians, and researchers dedicated to upholding the highest standards of peer review and academic rigor.</p>
+
+			<div class="space-y-6">
+				<div class="border-b border-[#E0E0E0] pb-6 flex items-start gap-4">
+					<div class="w-12 h-12 bg-black text-white font-sans font-bold flex items-center justify-center rounded-full text-lg">MV</div>
+					<div>
+						<h3 class="text-lg font-bold font-sans text-black leading-none">Prof. Marcus Vance, PhD</h3>
+						<div class="font-mono text-[10px] text-gray-400 uppercase tracking-widest mt-1">Editor-in-Chief</div>
+						<p class="text-sm text-gray-600 mt-2">Department of Biostatistics & Clinical Research, University of Sydney</p>
+					</div>
+				</div>
+				<div class="border-b border-[#E0E0E0] pb-6 flex items-start gap-4">
+					<div class="w-12 h-12 bg-black text-white font-sans font-bold flex items-center justify-center rounded-full text-lg">ER</div>
+					<div>
+						<h3 class="text-lg font-bold font-sans text-black leading-none">Dr. Elena Rostova, MD</h3>
+						<div class="font-mono text-[10px] text-gray-400 uppercase tracking-widest mt-1">Senior Editorial Director</div>
+						<p class="text-sm text-gray-600 mt-2">Center for Genomic Medicine, Harvard Medical School</p>
+					</div>
+				</div>
+				<div class="border-b border-[#E0E0E0] pb-6 flex items-start gap-4">
+					<div class="w-12 h-12 bg-black text-white font-sans font-bold flex items-center justify-center rounded-full text-lg">KT</div>
+					<div>
+						<h3 class="text-lg font-bold font-sans text-black leading-none">Dr. Kenji Tanaka, PhD</h3>
+						<div class="font-mono text-[10px] text-gray-400 uppercase tracking-widest mt-1">Associate Editor - Cardiology</div>
+						<p class="text-sm text-gray-600 mt-2">Graduate School of Medicine, Kyoto University</p>
+					</div>
+				</div>
+				<div class="border-b border-[#E0E0E0] pb-6 flex items-start gap-4">
+					<div class="w-12 h-12 bg-black text-white font-sans font-bold flex items-center justify-center rounded-full text-lg">SJ</div>
+					<div>
+						<h3 class="text-lg font-bold font-sans text-black leading-none">Prof. Sarah Jenkins, MD</h3>
+						<div class="font-mono text-[10px] text-gray-400 uppercase tracking-widest mt-1">Associate Editor - Neurology</div>
+						<p class="text-sm text-gray-600 mt-2">Nuffield Department of Clinical Neurosciences, Oxford University</p>
+					</div>
+				</div>
+			</div>
 		</div>
 	</main>
 </div>
